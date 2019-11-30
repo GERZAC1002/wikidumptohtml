@@ -126,14 +126,15 @@ int main(){
 					seite[seitel+4] = 'm';
 					seite[seitel+5] = 'l';
 					seite[seitel+6] = '\0';
-					if((datei = fopen(seite,"w"))==-1){
+					printf("Seite:%s\n",seite);
+					if((datei = fopen(seite,"w"))==NULL){
 						printf("Konnte Datei nicht öffnen!\n");
 						return 1;
 					}
-					for(int i = 0;i < strlength(seite);i++){
+					for(int i = 0;i < 1006;i++){
 						seite[i]='\0';
 					}
-					for(int i = 0;i < strlength(titel);i++){
+					for(int i = 0;i < 1000;i++){
 						titel[i]='\0';
 					}
 					//printf("<! DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1><article>",titel,titel);
