@@ -91,7 +91,7 @@ int strersetz(char *string1){
 	return res;
 }
 
-int main(){
+int main(int argc,char *argv[]){
 	int c;
 	char zeile[10000];
 	char zeilezeigen = 1;
@@ -100,7 +100,13 @@ int main(){
 	int index = 0;
 	int seitenzahl = 0;
 	FILE *datei;
-	while((c = getchar())!=EOF){
+	FILE *dump;
+	if((dump = fopen(argv[1],"r")) == NULL){
+		printf("Konnte Eingabedatei %s nicht lesen!\n",argv[1]);
+		printf("Programmaufruf: wikidumptohtml <dumpfile>\n");
+		return 0;
+	}
+	while((c = getc(dump))!=EOF){
 		if(c == '\n'){
 			//if(strcomp(zeile,suche)!=-1){
 			if(strdel(zeile)!=-1){
