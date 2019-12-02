@@ -120,12 +120,17 @@ int main(){
 						seite[i]=titel[i];
 					}
 					int seitel = strlength(seite);
-					seite[seitel+1] = '.';
-					seite[seitel+2] = 'h';
-					seite[seitel+3] = 't';
-					seite[seitel+4] = 'm';
-					seite[seitel+5] = 'l';
-					seite[seitel+6] = '\0';
+					for(int i = 0; i < seitel;i++){
+						if(seite[i] == '/'){
+							seite[i] = '_';
+						}
+					}
+					seite[seitel+0] = '.';
+					seite[seitel+1] = 'h';
+					seite[seitel+2] = 't';
+					seite[seitel+3] = 'm';
+					seite[seitel+4] = 'l';
+					seite[seitel+5] = '\0';
 					printf("Seite:%s\n",seite);
 					if((datei = fopen(seite,"w"))==NULL){
 						printf("Konnte Datei nicht öffnen!\n");
