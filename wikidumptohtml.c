@@ -98,6 +98,7 @@ int main(){
 	char titel[1000];
 	char seite[1006];
 	int index = 0;
+	int seitenzahl = 0;
 	FILE *datei;
 	while((c = getchar())!=EOF){
 		if(c == '\n'){
@@ -110,6 +111,7 @@ int main(){
 					//printf("<! DOCTYPE html>\n<html>\n\t<head>\n\t");
 					//fprintf(datei,"<! DOCTYPE html>\n<html>\n\t<head>\n\t");
 					zeilezeigen = 0;
+					seitenzahl = seitenzahl + 1;
 				}
 				if(strcomp(zeile,"<title>")!=-1){
 					for(int i = 0;i < strlength(zeile)-19;i++){
@@ -131,7 +133,7 @@ int main(){
 					seite[seitel+3] = 'm';
 					seite[seitel+4] = 'l';
 					seite[seitel+5] = '\0';
-					printf("Seite:%s\n",seite);
+					printf("%d.Seite:%s\n",seitenzahl,seite);
 					if((datei = fopen(seite,"w"))==NULL){
 						printf("Konnte Datei nicht öffnen!\n");
 						return 1;
@@ -143,12 +145,12 @@ int main(){
 						titel[i]='\0';
 					}
 					//printf("<! DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1><article>",titel,titel);
-					fprintf(datei,"<! DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
+					fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
 					zeilezeigen = 0;
 				}
 				if(strcomp(zeile,"</page>")!=-1){
 					//printf("</article>\n\t</body>\n</html>\n");
-					fprintf(datei,"</article>\n\t<body>\n</html>");
+					fprintf(datei,"</article>\n\t</body>\n</html>");
 					fclose(datei);
 					zeilezeigen = 0;
 				}
