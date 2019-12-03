@@ -95,8 +95,8 @@ int main(int argc,char *argv[]){
 	int c;
 	char zeile[10000];
 	char zeilezeigen = 1;
-	char titel[1000];
-	char seite[1006];
+	char titel[100];
+	char seite[106];
 	int index = 0;
 	int seitenzahl = 0;
 	FILE *datei;
@@ -110,12 +110,9 @@ int main(int argc,char *argv[]){
 		if(c == '\n'){
 			//if(strcomp(zeile,suche)!=-1){
 			if(strdel(zeile)!=-1){
-
 			}else{
 				while(strersetz(zeile)!=-1){}
 				if(strcomp(zeile,"<page>")!=-1){
-					//printf("<! DOCTYPE html>\n<html>\n\t<head>\n\t");
-					//fprintf(datei,"<! DOCTYPE html>\n<html>\n\t<head>\n\t");
 					zeilezeigen = 0;
 					seitenzahl = seitenzahl + 1;
 				}
@@ -144,43 +141,36 @@ int main(int argc,char *argv[]){
 						printf("Konnte Datei nicht öffnen!\n");
 						return 1;
 					}
-					for(int i = 0;i < 1006;i++){
+					for(int i = 0;seite[i] != '\n';i++){
 						seite[i]='\0';
 					}
-					for(int i = 0;i < 1000;i++){
+					for(int i = 0;titel[i] != '\0';i++){
 						titel[i]='\0';
 					}
-					//printf("<! DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1><article>",titel,titel);
 					fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
 					zeilezeigen = 0;
 				}
 				if(strcomp(zeile,"</page>")!=-1){
-					//printf("</article>\n\t</body>\n</html>\n");
 					fprintf(datei,"</article>\n\t</body>\n</html>");
 					fclose(datei);
 					zeilezeigen = 0;
 				}
 				if((strcomp(zeile,"== ")!=1)&&(strcomp(zeile," ==")!=-1)){
-					//printf("</article>\n<h2>%s</h2>\n<article>\n",zeile);
 					fprintf(datei,"</article>\n<h2>%s</h2>\n<article>\n",zeile);
 					zeilezeigen = 0;
 				}
 				if((strcomp(zeile,"=== ")!=1)&&(strcomp(zeile," ===")!=-1)){
-					//printf("</article>\n<h3>%s</h3>\n<article>\n",zeile);
 					fprintf(datei,"</article>\n<h3>%s</h3>\n<article>\n",zeile);
 					zeilezeigen = 0;
 				}
 				if(zeilezeigen == 1){
-					//printf("%s\n<br>",zeile);
 					fprintf(datei,"%s<br>\n",zeile);
 				}
 				zeilezeigen = 1;
 			}
-			//printf("Anzahl:%i\n",strlength(zeile));
-			for(int i=0;i<10000;i++){
+			for(int i=0;zeile[i]!='\0';i++){
 				zeile[i]='\0';
 			}
-			//}
 			index = 0;
 		}else{
 			zeile[index] = c;
