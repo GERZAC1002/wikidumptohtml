@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char loesch[100][100] = {
+char loesch[50][100] = {
 	"<mediawiki ",
 	"<id>",
 	"<username>",
@@ -32,7 +32,7 @@ char loesch[100][100] = {
 	"</siteinfo>"
 };
 
-char ersetz[100][100] = {
+char ersetz[50][10] = {
 	"[[",
 	"]]",
 	"{{",
@@ -69,7 +69,7 @@ int strcomp(char *string1,char *string2){
 
 int strdel(char *string1){
 	int res=-1;
-	for(int i=0;i<100;i++){
+	for(int i=0;i<50;i++){
 		if(strcomp(string1,loesch[i])!=-1){
 			res = 0;
 		}
@@ -79,7 +79,7 @@ int strdel(char *string1){
 
 int strersetz(char *string1){
 	int res=-1;
-	for(int i=0;i<100;i++){
+	for(int i=0;i<50;i++){
 		int pos = strcomp(string1,ersetz[i]);
 		if(pos != -1){
 			for(int i=0;i<strlength(ersetz[i]);i++){
@@ -125,9 +125,12 @@ int main(int argc,char *argv[]){
 						seite[i]=titel[i];
 					}
 					int seitel = strlength(seite);
-					for(int i = 0; i < seitel;i++){
+					for(int i = 0; i < strlength(seite);i++){
 						if(seite[i] == '/'){
 							seite[i] = '_';
+						}
+						if(seite[i] == ' '){
+							seite[i] == '_';
 						}
 					}
 					seite[seitel+0] = '.';
@@ -137,7 +140,7 @@ int main(int argc,char *argv[]){
 					seite[seitel+4] = 'l';
 					seite[seitel+5] = '\0';
 					printf("%d.Seite:%s\n",seitenzahl,seite);
-					if((datei = fopen(seite,"w"))==NULL){
+					if((datei = fopen(seite,"w")) == NULL){
 						printf("Konnte Datei nicht öffnen!\n");
 						return 1;
 					}
@@ -147,7 +150,7 @@ int main(int argc,char *argv[]){
 					for(int i = 0;titel[i] != '\0';i++){
 						titel[i]='\0';
 					}
-					fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
+					fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t\t<meta charset=\"UTF-8\" />\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
 					zeilezeigen = 0;
 				}
 				if(strcomp(zeile,"</page>")!=-1){
