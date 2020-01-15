@@ -130,7 +130,7 @@ int main(int argc,char *argv[]){
 							seite[i] = '_';
 						}
 						if(seite[i] == ' '){
-							seite[i] == '_';
+							seite[i] = '_';
 						}
 					}
 					seite[seitel+0] = '.';
