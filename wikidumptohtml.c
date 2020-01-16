@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char loesch[50][100] = {
 	"<mediawiki ",
@@ -91,12 +92,21 @@ int strersetz(char *string1){
 	return res;
 }
 
+int clrarray(char *string){
+	for(int i = 0;string[i] != '\0';i++){
+		string[i] = '\0';
+	}
+	return 0;
+}
+
 int main(int argc,char *argv[]){
 	int c;
-	char zeile[10000];
+	char zeile[3300];
+	char tmp[3300];
 	char zeilezeigen = 1;
 	char titel[100];
 	char seite[106];
+	char *page = "  <page>";
 	int index = 0;
 	int seitenzahl = 0;
 	FILE *datei;
@@ -108,11 +118,16 @@ int main(int argc,char *argv[]){
 	}
 	while((c = getc(dump))!=EOF){
 		if(c == '\n'){
-			//if(strcomp(zeile,suche)!=-1){
 			if(strdel(zeile)!=-1){
 			}else{
-				while(strersetz(zeile)!=-1){}
-				if(strcomp(zeile,"<page>")!=-1){
+				char p = 1;
+				for(int i = 0;i < strlength(page);i++){
+					if(zeile[i] != page[i]){
+						p = 0;
+						break;
+					}
+				}
+				if(p == 1){
 					zeilezeigen = 0;
 					seitenzahl = seitenzahl + 1;
 				}
@@ -142,6 +157,7 @@ int main(int argc,char *argv[]){
 					printf("%d.Seite:%s\n",seitenzahl,seite);
 					if((datei = fopen(seite,"r")) != NULL){
 						datei = NULL;
+						printf("Seite %s schon erstellt!\n",seite);
 					}else{
 						if((datei = fopen(seite,"w")) == NULL){
 							printf("Konnte Datei nicht öffnen!\n");
@@ -150,24 +166,21 @@ int main(int argc,char *argv[]){
 						fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t\t<meta charset=\"UTF-8\" />\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
 						zeilezeigen = 0;
 					}
-					for(int i = 0;seite[i] != '\0';i++){
-						seite[i] = '\0';
-					}
-					for(int i = 0;titel[i] != '\0';i++){
-						titel[i] = '\0';
-					}
+					clrarray(seite);
+					clrarray(titel);
 				}
 				if(datei != NULL){
-					if(strcomp(zeile,"</page>")!=-1){
+					if(strstr(zeile,"  </page>")!=NULL){
 						fprintf(datei,"</article>\n\t</body>\n</html>");
 						fclose(datei);
 						zeilezeigen = 0;
+					}else{
+						while(strersetz(zeile)!=-1){}
 					}
 					if((strcomp(zeile,"== ")!=1)&&(strcomp(zeile," ==")!=-1)){
 						fprintf(datei,"</article>\n<h2>%s</h2>\n<article>\n",zeile);
 						zeilezeigen = 0;
-					}
-					if((strcomp(zeile,"=== ")!=1)&&(strcomp(zeile," ===")!=-1)){
+					}else if((strcomp(zeile,"=== ")!=1)&&(strcomp(zeile," ===")!=-1)){
 						fprintf(datei,"</article>\n<h3>%s</h3>\n<article>\n",zeile);
 						zeilezeigen = 0;
 					}
