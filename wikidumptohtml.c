@@ -101,14 +101,15 @@ int clrarray(char *string){
 
 int main(int argc,char *argv[]){
 	int c;
-	char zeile[3300];
-	char tmp[3300];
+	char zeile[10000];
+	char tmp[10000];
 	char zeilezeigen = 1;
 	char titel[100];
 	char seite[106];
 	char *page = "  <page>";
 	int index = 0;
 	int seitenzahl = 0;
+	int maxzeile = 0;
 	FILE *datei;
 	FILE *dump;
 	if((dump = fopen(argv[1],"r")) == NULL){
@@ -147,6 +148,12 @@ int main(int argc,char *argv[]){
 						if(seite[i] == ' '){
 							seite[i] = '_';
 						}
+						if(seite[i] == '('){
+							seite[i] = '_';
+						}
+						if(seite[i] == ')'){
+							seite [i] = '_';
+						}
 					}
 					seite[seitel+0] = '.';
 					seite[seitel+1] = 'h';
@@ -160,12 +167,12 @@ int main(int argc,char *argv[]){
 						printf("Seite %s schon erstellt!\n",seite);
 					}else{
 						if((datei = fopen(seite,"w")) == NULL){
-							printf("Konnte Datei nicht öffnen!\n");
+							printf("Konnte Datei %s  nicht öffnen!\n",seite);
 							return 1;
 						}
 						fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t\t<meta charset=\"UTF-8\" />\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
-						zeilezeigen = 0;
 					}
+					zeilezeigen = 0;
 					clrarray(seite);
 					clrarray(titel);
 				}
@@ -190,13 +197,22 @@ int main(int argc,char *argv[]){
 					zeilezeigen = 1;
 				}
 			}
+			if(maxzeile < strlength(zeile) && maxzeile > 0){
+				printf("Max. Zeilenlänge: %d\n",maxzeile);
+			}
 			for(int i=0;zeile[i]!='\0';i++){
 				zeile[i]='\0';
 			}
 			index = 0;
 		}else{
-			zeile[index] = c;
-			index = index + 1;
+			if(index < 10000){		
+				zeile[index] = c;
+				index = index + 1;
+			}else{
+				printf("Zeilenlänge überschritten!\n");
+				return -1;
+				break;
+			}
 		}
 	}
 	fclose(datei);
