@@ -101,9 +101,11 @@ int clrarray(char *string){
 
 int main(int argc,char *argv[]){
 	int c;
-	char zeile[10000];
-	char tmp[10000];
+	int lange = 1000;
+	char *zeile = malloc(lange);
+	//char *tmp = malloc(lange);
 	char zeilezeigen = 1;
+	char seitezeigen = 1;
 	char titel[100];
 	char seite[106];
 	char *page = "  <page>";
@@ -133,6 +135,7 @@ int main(int argc,char *argv[]){
 					seitenzahl = seitenzahl + 1;
 				}
 				if(strcomp(zeile,"<title>")!=-1){
+					seitezeigen = 1;
 					for(int i = 0;i < strlength(zeile)-19;i++){
 						titel[i] = zeile[strcomp(zeile,"<title>")+7+i];
 						titel[i+1] = '\0';
@@ -165,9 +168,10 @@ int main(int argc,char *argv[]){
 					if((datei = fopen(seite,"r")) != NULL){
 						datei = NULL;
 						printf("Seite %s schon erstellt!\n",seite);
+						seitezeigen = 0;
 					}else{
 						if((datei = fopen(seite,"w")) == NULL){
-							printf("Konnte Datei %s  nicht öffnen!\n",seite);
+							printf("Konnte Datei %s nicht öffnen!\n",seite);
 							return 1;
 						}
 						fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t\t<meta charset=\"UTF-8\" />\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
@@ -176,10 +180,15 @@ int main(int argc,char *argv[]){
 					clrarray(seite);
 					clrarray(titel);
 				}
-				if(datei != NULL){
+				if(datei != NULL && seitezeigen != 0){
 					if(strstr(zeile,"  </page>")!=NULL){
 						fprintf(datei,"</article>\n\t</body>\n</html>");
 						fclose(datei);
+						lange = 1000;
+						free(zeile);
+						//free(tmp);
+						zeile = calloc(lange,1);
+						//*tmp = malloc(lange);
 						zeilezeigen = 0;
 					}else{
 						while(strersetz(zeile)!=-1){}
@@ -205,16 +214,33 @@ int main(int argc,char *argv[]){
 			}
 			index = 0;
 		}else{
-			if(index < 10000){		
+			if(index < lange){
 				zeile[index] = c;
 				index = index + 1;
 			}else{
-				printf("Zeilenlänge überschritten!\n");
-				return -1;
-				break;
+				char *tmp = calloc(lange,1);
+				for(int i=0; i < lange;i++){
+					tmp[i] = zeile[i];
+				}
+				free(zeile);
+				zeile = (char *)calloc(2*lange,1);
+				if(zeile == NULL){
+					printf("Konnte Speicher nich reservieren!\n");
+				}
+				for(int i=0; i < lange;i++){
+					zeile[i] = tmp[i];
+				}
+				free(tmp);
+				//*tmp = malloc(2*lange);
+				lange = lange*2;
+				printf("Neue Zeilenlänge: %d\n",lange);
+				zeile[index] = c;
+				index = index + 1;
 			}
 		}
 	}
+	free(zeile);
+	//free(tmp);
 	fclose(datei);
 	return 0;
 }
