@@ -1,5 +1,5 @@
 # wikidumptohtml
-Crude wikipedia dump to html converter<br />
+Crude wikipedia dump to html converter that is not ready yet<br />
 Compile: gcc wikidumptohtml.c -o wikidumptohtml<br />
 How to use:<br />
 wikidumptohtml <wikidumpfile.xml-*><br />

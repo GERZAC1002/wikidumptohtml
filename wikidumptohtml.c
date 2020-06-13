@@ -45,7 +45,7 @@ char ersetz[50][10] = {
 
 int strlength(char *string){
 	int i=0;
-	while(string[i]){
+	while(string[i]!= '\0'){
 		i++;
 	}
 	return i;
@@ -100,18 +100,17 @@ int clrarray(char *string){
 }
 
 int main(int argc,char *argv[]){
-	int c;
-	int lange = 1000;
+	long c;
+	long lange = 1000;
 	char *zeile = malloc(lange);
-	//char *tmp = malloc(lange);
-	char zeilezeigen = 1;
-	char seitezeigen = 1;
-	char titel[100];
-	char seite[106];
+	register char zeilezeigen = 1;
+	register char seitezeigen = 1;
+	char titel[1000];
+	char seite[1006];
 	char *page = "  <page>";
-	int index = 0;
-	int seitenzahl = 0;
-	int maxzeile = 0;
+	register long index = 0;
+	register long seitenzahl = 0;
+	register long maxzeile = 0;
 	FILE *datei;
 	FILE *dump;
 	if((dump = fopen(argv[1],"r")) == NULL){
@@ -164,7 +163,7 @@ int main(int argc,char *argv[]){
 					seite[seitel+3] = 'm';
 					seite[seitel+4] = 'l';
 					seite[seitel+5] = '\0';
-					printf("%d.Seite:%s\n",seitenzahl,seite);
+					printf("%ld.Seite:%s\n",seitenzahl,seite);
 					if((datei = fopen(seite,"r")) != NULL){
 						datei = NULL;
 						printf("Seite %s schon erstellt!\n",seite);
@@ -184,11 +183,6 @@ int main(int argc,char *argv[]){
 					if(strstr(zeile,"  </page>")!=NULL){
 						fprintf(datei,"</article>\n\t</body>\n</html>");
 						fclose(datei);
-						lange = 1000;
-						free(zeile);
-						//free(tmp);
-						zeile = calloc(lange,1);
-						//*tmp = malloc(lange);
 						zeilezeigen = 0;
 					}else{
 						while(strersetz(zeile)!=-1){}
@@ -207,7 +201,7 @@ int main(int argc,char *argv[]){
 				}
 			}
 			if(maxzeile < strlength(zeile) && maxzeile > 0){
-				printf("Max. Zeilenlänge: %d\n",maxzeile);
+				printf("Max. Zeilenlänge: %ld\n",maxzeile);
 			}
 			for(int i=0;zeile[i]!='\0';i++){
 				zeile[i]='\0';
@@ -231,16 +225,14 @@ int main(int argc,char *argv[]){
 					zeile[i] = tmp[i];
 				}
 				free(tmp);
-				//*tmp = malloc(2*lange);
 				lange = lange*2;
-				printf("Neue Zeilenlänge: %d\n",lange);
+				printf("Neue Zeilenlänge: %ld\n",lange);
 				zeile[index] = c;
 				index = index + 1;
 			}
 		}
 	}
 	free(zeile);
-	//free(tmp);
-	fclose(datei);
+	fclose(dump);
 	return 0;
 }
