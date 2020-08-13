@@ -165,7 +165,7 @@ int main(int argc,char *argv[]){
 					seite[seitel+5] = '\0';
 					printf("%ld.Seite:%s\n",seitenzahl,seite);
 					if((datei = fopen(seite,"r")) != NULL){
-						datei = NULL;
+						fclose(datei);
 						printf("Seite %s schon erstellt!\n",seite);
 						seitezeigen = 0;
 					}else{
