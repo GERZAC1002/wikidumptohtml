@@ -65,19 +65,19 @@ int strcomp(char *string1,char *string2){
 			}
 		}
 	}
-	return result;	
+	return result;
 }
 
 int strdel(char *string1){
 	int res=-1;
 	for(int i=0;i<50;i++){
 		if(strcomp(string1,loesch[i])!=-1){
-			res = 0;
+			return 0;
 		}
 	}
 	return res;
 }
-
+/*
 int strersetz(char *string1){
 	int res=-1;
 	for(int i=0;i<50;i++){
@@ -91,7 +91,7 @@ int strersetz(char *string1){
 	}
 	return res;
 }
-
+*/
 int clrarray(char *string){
 	for(int i = 0;string[i] != '\0';i++){
 		string[i] = '\0';
@@ -139,9 +139,11 @@ int main(int argc,char *argv[]){
 						titel[i] = zeile[strcomp(zeile,"<title>")+7+i];
 						titel[i+1] = '\0';
 					}
-					for(int i = 0;titel[i]!='\0';i++){
-						seite[i]=titel[i];
+					int s = 0;
+					for(s = 0;titel[s] != '\0';s++){
+						seite[s] = titel[s];
 					}
+					seite[s] = 0;
 					int seitel = strlength(seite);
 					for(int i = 0; i < strlength(seite);i++){
 						if(seite[i] == '/'){
@@ -156,6 +158,9 @@ int main(int argc,char *argv[]){
 						if(seite[i] == ')'){
 							seite [i] = '_';
 						}
+						if(seite[i] == '.'){
+							seite[i] = '_';
+						}
 					}
 					seite[seitel+0] = '.';
 					seite[seitel+1] = 'h';
@@ -163,21 +168,23 @@ int main(int argc,char *argv[]){
 					seite[seitel+3] = 'm';
 					seite[seitel+4] = 'l';
 					seite[seitel+5] = '\0';
-					printf("%ld.Seite:%s\n",seitenzahl,seite);
+					printf("%ld. Seite: \"%s\"\n",seitenzahl,seite);
 					if((datei = fopen(seite,"r")) != NULL){
 						fclose(datei);
-						printf("Seite %s schon erstellt!\n",seite);
+						printf("Seite \"%s\" schon erstellt!\n",seite);
 						seitezeigen = 0;
 					}else{
 						if((datei = fopen(seite,"w")) == NULL){
-							printf("Konnte Datei %s nicht öffnen!\n",seite);
+							printf("Konnte Datei \"%s\" nicht öffnen!\n",seite);
 							return 1;
 						}
 						fprintf(datei,"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>%s</title>\n\t\t<meta charset=\"UTF-8\" />\n\t</head>\n\t<body>\n\t<h1>%s</h1>\n\t<article>",titel,titel);
 					}
 					zeilezeigen = 0;
-					clrarray(seite);
-					clrarray(titel);
+					//clrarray(seite);
+					//clrarray(titel);
+					seite[0] = 0;
+					titel[0] = 0;
 				}
 				if(datei != NULL && seitezeigen != 0){
 					if(strstr(zeile,"  </page>")!=NULL){
@@ -185,7 +192,7 @@ int main(int argc,char *argv[]){
 						fclose(datei);
 						zeilezeigen = 0;
 					}else{
-						while(strersetz(zeile)!=-1){}
+						//while(strersetz(zeile)!=-1){}
 					}
 					if((strcomp(zeile,"== ")!=1)&&(strcomp(zeile," ==")!=-1)){
 						fprintf(datei,"</article>\n<h2>%s</h2>\n<article>\n",zeile);
